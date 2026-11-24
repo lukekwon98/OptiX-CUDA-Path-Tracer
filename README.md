@@ -302,7 +302,7 @@ The `USE_RAYGEN_CAMERA` toggle preserves the separate-camera version for compari
 
 With camera generation included, the separate camera kernel disappears. The visible main GPU sequence becomes **OptiX path tracing → final gather → display conversion**. The selected-frame average is **1.13 ms (884.20 FPS)**, compared with **1.73 ms** in the separate-camera capture. The controlled Suzanne benchmark similarly improves from **680 to 960 FPS**, a **41% increase**.
 
-Gaps remain around the short GPU sequence. Once tracing is this fast, host execution, presentation, and scheduling are plausible contributors to total frame time, but these results do not isolate their individual costs.
+Reduced global-memory traffic may also contribute to the speedup. Moving the bounce loop into raygen removes the need to write updated path state to a global buffer for the next bounce to reload, and moving camera generation into raygen eliminates one more round trip since each invocation can trace its initial ray directly. Gaps still remain around the short GPU sequence, but once tracing is significantly fast, host execution, presentation, and scheduling are plausible contributors to total frame time.
 
 #### Extra: Forced Inlining
 
